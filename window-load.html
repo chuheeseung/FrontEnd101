@@ -1,0 +1,41 @@
+<!--
+    @chu
+    @20211130
+    @2.10
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="test.js" defer></script> <!-- 1번 -->
+</head>
+<body>
+    
+    <script>
+        //only document
+        //html만 완료가 되면 호출됨
+        window.addEventListener('DOMContentLoaded', () => { //2번
+            console.log('DOMContentLoaded');
+        })
+
+        //after resources (css, images)
+        //모든 리소스가 로드되면 호출됨
+        window.addEventListener('load', () => { //3번
+            console.log('load');
+        })
+
+        //before unload
+        window.addEventListener('beforeunload', () => { 
+            console.log('beforeunload');
+        })
+
+        //resource is being unloaded
+        window.addEventListener('unload', () => { 
+            console.log('unload');
+        })
+    </script>
+</body>
+</html>
