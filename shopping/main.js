@@ -1,6 +1,7 @@
 const items = document.querySelector('.items');
 const input = document.querySelector('.footer__input');
 const addBtn = document.querySelector('.footer__button');
+const form = document.querySelector('.new_form');
 
 function onAdd() {
     const text = input.value;
@@ -37,15 +38,27 @@ function createItem(text) {
     return itemRow;
 }
 
+// <form></form>태그 사용하기 전
+/*
 addBtn.addEventListener('click', () => {
     onAdd();
 });
 
-input.addEventListener('keypress', (event) => {
+input.addEventListener('keydown', (event) => {
+    if(event.isComposing) { //글자가 만들어지고 있는 중이면 처리하지 않고 패스
+        return;
+    }
+
     if(event.key === 'Enter') {
         onAdd();
     }
 });
+*/
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault(); // 'submit' 작동 후 브라우저가 페이지 다시 로딩하는 문제 막아줌
+    onAdd(); 
+})
 
 items.addEventListener('click', event => {
     const id = event.target.dataset.id;
