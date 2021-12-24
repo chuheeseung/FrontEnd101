@@ -3,13 +3,17 @@ import * as sound from './sound.js';
 
 const CARROT_SIZE = 80;
 
-export default class Field {
+export const ItemType = Object.freeze({
+    carrot: 'carrot',
+    bug: 'bug'
+});
+
+export class Field {
     constructor(carrotCount, bugCount) {
         this.carrotCount = carrotCount;
         this.bugCount = bugCount;
         this.field = document.querySelector(".game__field");
         this.fieldRect = this.field.getBoundingClientRect();
-
         this.field.addEventListener("click", this.onClick);
     }
 
@@ -42,14 +46,14 @@ export default class Field {
         }
     }
 
-    onClick(event) {
+    onClick = event => {
         const target = event.target;
         if (target.matches(".carrot")) {
             target.remove();
             sound.playCarrot();
-            this.onItemclick && this.onItemclick('carrot');
+            this.onItemclick && this.onItemclick(ItemType.carrot);
         } else if (target.matches(".bug")) {
-            this.onItemclick && this.onItemclick('bug');
+            this.onItemclick && this.onItemclick(ItemType.bug);
         }
     }
 

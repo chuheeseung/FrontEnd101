@@ -1,43 +1,68 @@
 'use strict';
 import PopUp from './popup.js';
-import Field from './field.js';
-import * as sound from './sound.js';
+import { GameBuilder, Reason } from './game.js';
+import * as sound from "./sound.js";
 
+/*
 const CARROT_SIZE = 80;
 const CARROT_COUNT = 5;
 const BUG_COUNT = 5;
 const GAME_DURATION_SEC = 5;
+*/
+
+const gameFinishBanner = new PopUp();
+const game = new GameBuilder()
+    .withGameDuration(5)
+    .withCarrotCount(5)
+    .withBugCount(5)
+    .build();
+
+game.setGameStopListener(reason => {
+    let message;
+    switch (reason) {
+        case Reason.cancel:
+            message = 'REPLAY?';
+            sound.playAlert();
+            break;
+        case Reason.win:
+            message = 'YOU WON';
+            sound.playWin();
+            break;
+        case Reason.lose:
+            message = 'YOU LOST';
+            sound.playBug();
+            break;
+        default:
+            throw new Error('not valid reason');
+    }
+    gameFinishBanner.showWithText(message);
+});
+
+gameFinishBanner.setClickListener(() => {
+    game.start();
+});
 
 /*
 const field = document.querySelector('.game__field');
 const fieldRect = field.getBoundingClientRect();
-*/
+
 const gameBtn = document.querySelector('.game__button');
 const gameTimer = document.querySelector('.game__timer');
 const gameScore = document.querySelector('.game__score');
 
-/*
 const popUp = document.querySelector('.pop-up');
 const popUpText = document.querySelector('.pop-up__message');
 const popUpRefresh = document.querySelector('.pop-up__refresh');
-*/
 
 let started = false;
 let score = 0;
 let timer = undefined;
 
-/*
 const carrotSound = new Audio('./sound/carrot_pull.mp3');
 const alertSound = new Audio('./sound/alert.wav');
 const bgSound = new Audio('./sound/bg.mp3');
 const bugSound = new Audio('./sound/bug_pull.mp3');
 const winSound = new Audio('./sound/game_win.mp3');
-*/
-
-const gameFinishBanner = new PopUp();
-gameFinishBanner.setClickListener(() => {
-    startGame(); // 클릭이 되면 startGame()을 호출하라
-});
 
 const gameField = new Field(CARROT_COUNT, BUG_COUNT);
 gameField.setClicklistener(onItemClick);
@@ -69,12 +94,10 @@ gameBtn.addEventListener('click', () => {
     started = !started;
 })
 
-/*
 popUpRefresh.addEventListener('click', () => {
     startGame();
     hidePopUp(); 
 })
-*/
 
 function startGame() {
     started = true;
@@ -97,6 +120,7 @@ function stopGame() {
     // stopSound(bgSound);
     sound.stopBackground();
 }
+
 
 function finishGame(win) {
     started = false;
@@ -155,7 +179,6 @@ function updateTimerText(time) {
     gameTimer.innerText = `${minutes}:${seconds}`;
 }
 
-/*
 function showPopUdWithText(text) {
     popUpText.innerText = text;
     popUp.classList.remove('pop-up__hide');
@@ -164,7 +187,6 @@ function showPopUdWithText(text) {
 function hidePopUp() {
     popUp.classList.add('pop-up__hide');
 }
-*/
 
 function initGame() {
     score = 0;
@@ -179,7 +201,6 @@ function initGame() {
 
 }
 
-/*
 function playSound(sound) {
     sound.currentTime = 0;
     sound.play();
@@ -188,13 +209,11 @@ function playSound(sound) {
 function stopSound() {
     sound.pause();
 }
-*/
 
 function updateScoreBoard() {
     gameScore.innerText = CARROT_COUNT - score;
 }
 
-/*
 function addItem(className, count, imgPath) {
     const x1 = 0;
     const y1 = 0;
